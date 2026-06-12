@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cfa-bg: #0a0e1a;
+  --cfa-card: #111827;
+  --cfa-border: #1f2937;
+  --cfa-text: #f3f4f6;
+  --cfa-muted: #9ca3af;
+  --cfa-accent: #3b82f6;
+  --cfa-success: #10b981;
+  --cfa-warning: #f59e0b;
+  --cfa-danger: #ef4444;
+}
+
+body {
+  background-color: var(--cfa-bg);
+  color: var(--cfa-text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cfa-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--cfa-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+
+/* Card */
+.cfa-card {
+  background: var(--cfa-card);
+  border: 1px solid var(--cfa-border);
+  border-radius: 12px;
+}
+
+/* Rating badges */
+.badge-buy {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-hold {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-sell {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Score colors */
+.score-high { color: #10b981; }
+.score-medium { color: #f59e0b; }
+.score-low { color: #ef4444; }
