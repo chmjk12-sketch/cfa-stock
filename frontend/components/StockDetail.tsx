@@ -29,6 +29,7 @@ const tabs = [
   { id: "growth", label: "成长性" },
   { id: "risk", label: "风险分析" },
   { id: "sector", label: "行业分析" },
+  { id: "forecast", label: "机构预测" },
 ];
 
 function RatingBadge({ rating }: { rating?: string }) {
@@ -436,6 +437,12 @@ export default function StockDetail({ stock, onBack }: StockDetailProps) {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {activeTab === "forecast" && (
+        <div className="space-y-6">
+          <p className="text-cfa-muted">机构预测数据加载中...</p>
         </div>
       )}
 

@@ -37,3 +37,9 @@ openai==1.57.0
 # Testing
 pytest==8.3.4
 pytest-asyncio==0.24.0
+
+# Scheduler & Data Sources
+apscheduler==3.10.4
+akshare>=1.16.72
+requests==2.32.3
+aiosqlite==0.20.0

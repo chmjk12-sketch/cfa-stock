@@ -207,3 +207,113 @@ export function triggerAnalysis(ticker: string): Promise<{ message: string; stoc
     method: "POST",
   });
 }
+
+// ===== Market API Response Types =====
+
+export interface MarketDataResponse {
+  ticker: string;
+  trade_date: string;
+  latest_price?: number;
+  change_pct?: number;
+  volume?: number;
+  market_cap?: number;
+  turnover?: number;
+}
+
+export interface KlineResponse {
+  trade_date: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+export interface ForecastResponse {
+  ticker: string;
+  report_date: string;
+  eps_forecast_optimistic?: number;
+  eps_forecast_neutral?: number;
+  eps_forecast_pessimistic?: number;
+  net_profit_growth?: number;
+  revenue_growth?: number;
+  target_price_optimistic?: number;
+  target_price_neutral?: number;
+  target_price_pessimistic?: number;
+  source_count?: number;
+  peg?: number;
+  upside_optimistic?: number;
+  upside_neutral?: number;
+  upside_pessimistic?: number;
+}
+
+// ===== Screen API Types =====
+
+export interface ScreenRequest {
+  sectors?: string[];
+  peg_range?: [number, number];
+  pe_range?: [number, number];
+  net_profit_growth_min?: number;
+  revenue_growth_min?: number;
+  rating?: string;
+  sort_by?: string;
+  sort_order?: "asc" | "desc";
+  page?: number;
+  page_size?: number;
+}
+
+export interface ScreenStockItem {
+  ticker: string;
+  name: string;
+  sector?: string;
+  latest_price?: number;
+  change_pct?: number;
+  pe_ttm?: number;
+  peg?: number;
+  net_profit_growth?: number;
+  target_price_neutral?: number;
+  upside_neutral?: number;
+  rating?: string;
+  composite_score?: number;
+}
+
+export interface ScreenResponse {
+  total: number;
+  page: number;
+  page_size: number;
+  stocks: ScreenStockItem[];
+}
+
+// ===== API Functions =====
+
+export function getMarketData(tickers?: string): Promise<MarketDataResponse[]> {
+  const query = tickers ? `?tickers=${encodeURIComponent(tickers)}` : "";
+  return request<MarketDataResponse[]>(`/api/market/realtime${query}`);
+}
+
+export function getStockMarketData(ticker: string): Promise<MarketDataResponse> {
+  return request<MarketDataResponse>(`/api/market/realtime/${encodeURIComponent(ticker)}`);
+}
+
+export function getKline(ticker: string, period: string = "30d"): Promise<KlineResponse[]> {
+  return request<KlineResponse[]>(`/api/kline/${encodeURIComponent(ticker)}?period=${period}`);
+}
+
+export function getForecast(ticker: string): Promise<ForecastResponse> {
+  return request<ForecastResponse>(`/api/forecast/${encodeURIComponent(ticker)}`);
+}
+
+export function screenStocks(req: ScreenRequest): Promise<ScreenResponse> {
+  return request<ScreenResponse>("/api/screen/", {
+    method: "POST",
+    body: JSON.stringify(req),
+  });
+}
+
+export function getScreenDimensions(): Promise<{
+  sectors: string[];
+  ratings: string[];
+  sort_options: { value: string; label: string }[];
+}> {
+  return request("/api/screen/dimensions");
+}

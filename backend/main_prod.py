@@ -97,8 +97,8 @@ conn_mod.sync_engine = sync_engine
 conn_mod.async_engine = async_engine
 
 # 也打补丁到 routers
-import api.routers.stocks, api.routers.analysis, api.routers.opportunities
-for mod in [api.routers.stocks, api.routers.analysis, api.routers.opportunities]:
+import api.routers.stocks, api.routers.analysis, api.routers.opportunities, api.routers.market, api.routers.screen, api.routers.forecast
+for mod in [api.routers.stocks, api.routers.analysis, api.routers.opportunities, api.routers.market, api.routers.screen, api.routers.forecast]:
     if hasattr(mod, 'get_async_session'):
         mod.get_async_session = get_async_session
 
@@ -201,6 +201,9 @@ app.add_middleware(
 app.include_router(api.routers.stocks.router, prefix="/api")
 app.include_router(api.routers.analysis.router, prefix="/api")
 app.include_router(api.routers.opportunities.router, prefix="/api")
+app.include_router(api.routers.market.router, prefix="/api")
+app.include_router(api.routers.screen.router, prefix="/api")
+app.include_router(api.routers.forecast.router, prefix="/api")
 
 @app.get("/health")
 async def health_check():

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter, usePathname } from "next/navigation";
 import {
   Home,
   Map,
@@ -11,23 +12,21 @@ import {
   Settings,
 } from "lucide-react";
 
-interface SidebarProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-}
-
 const menuItems = [
-  { id: "dashboard", label: "首页", icon: Home },
-  { id: "opportunities", label: "机会地图", icon: Map },
-  { id: "stocks", label: "股票池", icon: Database },
-  { id: "industry", label: "行业分析", icon: BarChart3 },
-  { id: "screener", label: "策略筛选", icon: Filter },
-  { id: "watchlist", label: "我的关注", icon: Heart },
-  { id: "backtest", label: "回测表现", icon: TrendingUp },
-  { id: "settings", label: "设置", icon: Settings },
+  { id: "dashboard", label: "首页", icon: Home, path: "/" },
+  { id: "opportunities", label: "机会地图", icon: Map, path: "/" },
+  { id: "stocks", label: "股票池", icon: Database, path: "/" },
+  { id: "industry", label: "行业分析", icon: BarChart3, path: "/" },
+  { id: "screener", label: "策略筛选", icon: Filter, path: "/screener" },
+  { id: "watchlist", label: "我的关注", icon: Heart, path: "/" },
+  { id: "backtest", label: "回测表现", icon: TrendingUp, path: "/" },
+  { id: "settings", label: "设置", icon: Settings, path: "/" },
 ];
 
-export default function Sidebar({ activeTab, onTabChange }: SidebarProps) {
+export default function Sidebar() {
+  const router = useRouter();
+  const pathname = usePathname();
+
   return (
     <aside className="w-16 bg-cfa-card border-r border-cfa-border flex flex-col items-center py-4">
       {/* Logo */}
@@ -39,11 +38,11 @@ export default function Sidebar({ activeTab, onTabChange }: SidebarProps) {
       <nav className="flex-1 space-y-2">
         {menuItems.map((item) => {
           const Icon = item.icon;
-          const isActive = activeTab === item.id;
+          const isActive = pathname === item.path || (item.path !== "/" && pathname.startsWith(item.path));
           return (
             <button
               key={item.id}
-              onClick={() => onTabChange(item.id)}
+              onClick={() => router.push(item.path)}
               className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
                 isActive
                   ? "bg-cfa-accent/20 text-cfa-accent"
