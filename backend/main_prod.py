@@ -216,7 +216,33 @@ async def api_health():
 # 前端静态文件（API 路由优先，其余走静态文件）
 FRONTEND_DIR = os.environ.get("FRONTEND_DIR", os.path.join(BASE_DIR, "frontend/out"))
 if os.path.isdir(FRONTEND_DIR):
-    app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
+    from fastapi.responses import FileResponse
+    import os as _os
+
+    @app.get("/{path:path}")
+    async def serve_spa(path: str):
+        """SPA fallback: 先尝试精确文件，再尝试 .html，最后返回 index.html"""
+        # 精确文件匹配
+        file_path = _os.path.join(FRONTEND_DIR, path)
+        if _os.path.isfile(file_path):
+            return FileResponse(file_path)
+        # 目录 + index.html
+        if _os.path.isdir(file_path):
+            index = _os.path.join(file_path, "index.html")
+            if _os.path.isfile(index):
+                return FileResponse(index)
+        # .html 后缀匹配
+        html_path = file_path + ".html"
+        if _os.path.isfile(html_path):
+            return FileResponse(html_path)
+        # SPA fallback
+        index = _os.path.join(FRONTEND_DIR, "index.html")
+        if _os.path.isfile(index):
+            return FileResponse(index)
+        return FileResponse(_os.path.join(FRONTEND_DIR, "404.html"), status_code=404)
+
+    # 静态资源（_next 目录）仍然用 StaticFiles 处理
+    app.mount("/_next", StaticFiles(directory=_os.path.join(FRONTEND_DIR, "_next")), name="next_static")
     print(f"✅ 前端静态目录: {FRONTEND_DIR}")
 else:
     print(f"⚠️ 前端静态目录不存在: {FRONTEND_DIR}")
